@@ -1,9 +1,9 @@
 from requests import get, post, delete
 from os import getenv
 
+import plotly.express as px
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 
 API_URL = getenv('API_URL', 'http://localhost:8000')
 
