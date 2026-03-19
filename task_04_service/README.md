@@ -1,5 +1,7 @@
 # CSV Manager (FastAPI + Streamlit)
 
+[Развёрнутая версия](https://pythonfordataengineer-ulzngspxzydszq4d6k8eke.streamlit.app/)
+
 Приложение для работы с CSV файлами через веб-интерфейс:
 
 - Просмотр данных с пагинацией
