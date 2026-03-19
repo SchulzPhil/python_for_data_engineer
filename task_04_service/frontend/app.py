@@ -1,10 +1,11 @@
-import requests
+from requests import get, post, delete
+from os import getenv
 
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-API_URL = 'http://localhost:8000'
+API_URL = getenv('API_URL', 'http://localhost:8000')
 
 st.title('CSV Manager')
 
@@ -24,7 +25,7 @@ if 'df_all' not in st.session_state:
 
 def load_data(page_only=False):
     try:
-        res_page = requests.get(
+        res_page = get(
             f'{API_URL}/records/{filename}',
             params={'page': st.session_state.page, 'limit': st.session_state.limit}
         )
@@ -36,7 +37,7 @@ def load_data(page_only=False):
         st.session_state.df_page = df_page
 
         if not page_only:
-            res_all = requests.get(f'{API_URL}/records/{filename}', params={'page': 1, 'limit': 1000})
+            res_all = get(f'{API_URL}/records/{filename}', params={'page': 1, 'limit': 1000})
             res_all.raise_for_status()
             data_all = res_all.json()
             df_all = pd.DataFrame(data_all['data'])
@@ -99,7 +100,7 @@ if not df_page.empty:
         for _, row in rows_to_delete.iterrows():
             row_id = int(row['id'])
             try:
-                requests.delete(f'{API_URL}/records/{filename}/{row_id}')
+                delete(f'{API_URL}/records/{filename}/{row_id}')
             except:
                 st.warning(f'Failed to delete row id={row_id}')
         st.success(f'Deleted {len(rows_to_delete)} rows')
@@ -126,7 +127,7 @@ with st.form('add_form'):
                 'price_eur': float(price_eur),
                 'price_sib': float(price_sib)
             }
-            res = requests.post(f'{API_URL}/records/{filename}', json=payload)
+            res = post(f'{API_URL}/records/{filename}', json=payload)
             res.raise_for_status()
             st.success('Row added!')
             load_data(page_only=False)
