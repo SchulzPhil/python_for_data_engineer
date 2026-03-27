@@ -103,8 +103,7 @@ def upsert_from_staging(
     while True:
         try:
             rows = cur.fetchmany(batch_size)
-        except Exception as e:
-            print("❌ ERROR during fetchmany:", e)
+        except Exception:
             conn.rollback()
             raise
 
@@ -113,11 +112,7 @@ def upsert_from_staging(
 
         try:
             execute_values(write_cur, insert_query, rows)
-        except Exception as e:
-            print("❌ ERROR during insert:")
-            print(e)
-            print("Sample rows:", rows[:3])
-
+        except Exception:
             conn.rollback()
             raise
 
